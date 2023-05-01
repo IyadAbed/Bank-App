@@ -14,6 +14,8 @@ const initState = {
             accountType: "Student accounts"
           }
   ]
-
-
 }
+
+  export default function Main () {
+    
+  } 
