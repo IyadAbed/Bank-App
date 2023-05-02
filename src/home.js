@@ -1,5 +1,22 @@
 import React, { useState, useEffect } from 'react';
 
+const initState = {
+  accounts: [
+    {
+      id: 1,
+      customerName: 'Israa Othman',
+      accountNumber: '123456',
+      accountType: 'Savings',
+    },
+    {
+      id: 2,
+      customerName: 'Ahmad Zahran',
+      accountNumber: '987654',
+      accountType: 'Student accounts',
+    },
+  ],
+};
+
 function Header() {
   return (
     <header>
@@ -8,15 +25,16 @@ function Header() {
   );
 }
 
-  function Main({ accounts, handleAddAccount, handleDeleteAccount }) {
+function Main({ accounts, handleAddAccount, handleDeleteAccount }) {
   return (
     <main>
       <AccountForm handleAddAccount={handleAddAccount} />
       <div>
         {accounts.map((account) => (
           <div key={account.id}>
-            <h2>{account.name}</h2>
-            <p>Balance: {account.balance}</p>
+            <h2>{account.customerName}</h2>
+            <p>Account Number: {account.accountNumber}</p>
+            <p>Account Type: {account.accountType}</p>
             <button onClick={() => handleDeleteAccount(account)}>
               Delete Account
             </button>
@@ -27,7 +45,7 @@ function Header() {
   );
 }
 
-  function Footer({ numberOfAccounts }) {
+function Footer({ numberOfAccounts }) {
   return (
     <footer>
       <p>Total accounts: {numberOfAccounts}</p>
@@ -36,30 +54,43 @@ function Header() {
 }
 
 function AccountForm({ handleAddAccount }) {
-  const [name, setName] = useState('');
-  const [balance, setBalance] = useState(0);
+  const [customerName, setCustomerName] = useState('');
+  const [accountNumber, setAccountNumber] = useState('');
+  const [accountType, setAccountType] = useState('');
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const newAccount = { id: Date.now(), name, balance };
+    const newAccount = {
+      id: Date.now(),
+      customerName,
+      accountNumber,
+      accountType,
+    };
     handleAddAccount(newAccount);
-    setName('');
-    setBalance(0);
+    setCustomerName('');
+    setAccountNumber('');
+    setAccountType('');
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <input
         type="text"
-        placeholder="Account Name"
-        value={name}
-        onChange={(event) => setName(event.target.value)}
+        placeholder="Customer Name"
+        value={customerName}
+        onChange={(event) => setCustomerName(event.target.value)}
       />
       <input
-        type="number"
-        placeholder="Starting Balance"
-        value={balance}
-        onChange={(event) => setBalance(event.target.value)}
+        type="text"
+        placeholder="Account Number"
+        value={accountNumber}
+        onChange={(event) => setAccountNumber(event.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="Account Type"
+        value={accountType}
+        onChange={(event) => setAccountType(event.target.value)}
       />
       <button type="submit">Add Account</button>
     </form>
@@ -67,8 +98,10 @@ function AccountForm({ handleAddAccount }) {
 }
 
 function Home() {
-  const [accounts, setAccounts] = useState([]);
-  const [numberOfAccounts, setNumberOfAccounts] = useState(0);
+  const [accounts, setAccounts] = useState(initState.accounts);
+  const [numberOfAccounts, setNumberOfAccounts] = useState(
+    initState.accounts.length
+  );
 
   useEffect(() => {
     const storedAccounts = localStorage.getItem('accounts');
